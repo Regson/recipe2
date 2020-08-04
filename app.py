@@ -16,21 +16,32 @@ welcome = """
     |   WELCOME TO MY RECIPE APP    |
     ---------------------------------
 """
+
 print(welcome)
 db.create_tables()
 
 
+def instruction(item):
+    print(
+        f"You can enter multiple {item} "
+        "just separate them with space. e.g item1 item2 item3"
+        )
+
+
 def add_recipe():
+    instruction("recipes")
     recipe_name = input("Enter recipe name: ").split(" ")
     db.add_recipe(recipe_name)
 
 
 def add_ingredients():
+    instruction("ingredients")
     ingredient_name = input("Enter ingredient name: ").split(" ")
     db.add_ingredient(ingredient_name)
 
 
 def add_recipe_ing():
+    instruction("ingredients for a recipe")
     recipe_name = input("Recipe name: ")
     ingredient_name = input("Ingredient name: ").split(" ")
     recipeName = db.find_recipe_ing_name(ingredient_name)
