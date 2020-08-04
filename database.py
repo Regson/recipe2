@@ -24,9 +24,11 @@ VIEW_RECIPE_ING = """SELECT ingredients.*
     JOIN recipe ON recipe.name = recipe_ing.recipe_name
     WHERE recipe.name = ?;"""
 RECIPE_BY_NAME = "SELECT * FROM recipe WHERE recipe.name = ?;"
-RECIPE_ING_BY_NAME = "SELECT recipe_name FROM recipe_ing WHERE recipe_ing.ingredient_name = ?;"
+RECIPE_ING_BY_NAME = """SELECT recipe_name FROM recipe_ing WHERE
+    recipe_ing.ingredient_name = ?;"""
 
 connection = sqlite3.connect("recipeDB.db")
+
 
 def create_tables():
     with connection:
@@ -42,26 +44,37 @@ def find_recipe_by_name(name):
         return cursor.fetchone()
 
 
-def find_recipe_ing_name(name):
-    with connection:
-        cursor = connection.cursor()
-        cursor.execute(RECIPE_ING_BY_NAME, (name,))
-        return cursor.fetchall()
+def find_recipe_ing_name(*names):
+    for ing_name in names:
+        for name in ing_name:
+            with connection:
+                cursor = connection.cursor()
+                cursor.execute(RECIPE_ING_BY_NAME, (name,))
+                return cursor.fetchall()
 
 
-def add_recipe(name):
-    with connection:
-        connection.execute(ADD_RECIPE, (name,))
+# With this you can add multiple recipe at a once
+def add_recipe(*names):
+    for recipe in names:
+        for name in recipe:
+            with connection:
+                connection.execute(ADD_RECIPE, (name,))
 
 
-def add_ingredient(name):
-    with connection:
-        connection.execute(ADD_INGREDIENT, (name,))
+def add_ingredient(*names):
+    for ingredient in names:
+        for name in ingredient:
+            with connection:
+                connection.execute(ADD_INGREDIENT, (name,))
 
 
-def add_recipe_ing(recipe_name, ingredient_name):
-    with connection:
-        connection.execute(ADD_RECIPE_ING, (recipe_name, ingredient_name))
+def add_recipe_ing(recipe_name, *ingredient_names):
+    for name in ingredient_names:
+        for ingredient_name in name:
+            with connection:
+                connection.execute(
+                    ADD_RECIPE_ING, (recipe_name, ingredient_name)
+                    )
 
 
 def get_all_recipe():
@@ -76,6 +89,7 @@ def get_all_ingredients():
         cursor = connection.cursor()
         cursor.execute(VIEW_ALL_INGREDIENTS)
         return cursor.fetchall()
+
 
 def get_recipe_ing(recipeName):
     with connection:

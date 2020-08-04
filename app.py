@@ -21,19 +21,18 @@ db.create_tables()
 
 
 def add_recipe():
-    recipe_name = input("Enter recipe name: ")
+    recipe_name = input("Enter recipe name: ").split(" ")
     db.add_recipe(recipe_name)
 
 
 def add_ingredients():
-    ingredient_name = input("Enter ingredient name: ")
+    ingredient_name = input("Enter ingredient name: ").split(" ")
     db.add_ingredient(ingredient_name)
 
 
 def add_recipe_ing():
     recipe_name = input("Recipe name: ")
-    ingredient_name = input("Ingredient name: ")
-    
+    ingredient_name = input("Ingredient name: ").split(" ")
     recipeName = db.find_recipe_ing_name(ingredient_name)
     if recipe_name in str(recipeName):
         print(str(recipeName))
@@ -41,7 +40,7 @@ def add_recipe_ing():
     else:
         db.add_recipe_ing(recipe_name, ingredient_name)
         print("\n<-- Data saved successfully -->\n")
-        
+
 
 def print_all_recipe(header, recipes):
     print(f"<-- {header} Recipes -->")
@@ -67,6 +66,7 @@ def print_all_recipe_ing():
     else:
         print("No ingredients")
     print("------------\n")
+
 
 while (user_input := input(menu)) != "7":
     if user_input == "1":
@@ -97,4 +97,3 @@ while (user_input := input(menu)) != "7":
         add_recipe_ing()
     elif user_input == "6":
         print_all_recipe_ing()
-    
